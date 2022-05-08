@@ -7,24 +7,14 @@ im = Image.open("ayaka.jpg")
 col,row =  im.size
 pixels = im.load()
 
-
-f1 = open("R.txt","w")
-f2 = open("G.txt","w")
-f3 = open("B.txt","w")
-f4 = open("RowCol.txt","w")
-
-f4.write("%d %d"%(row,col))
+f = open("RGB.txt","w")
+f.write("%d %d"%(row,col))
 
 for i in range(row):
     for j in range(col):
         r,g,b =  pixels[i,j]
+        f.write("%d %d %d "%(r,g,b))
 
-        f1.write("%d "%r)
-        f2.write("%d "%g)
-        f3.write("%d "%b)
-f1.close()
-f2.close()
-f3.close()
-
+f.close()
 
 

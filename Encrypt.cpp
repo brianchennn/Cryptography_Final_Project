@@ -4,7 +4,7 @@
 
 using namespace std;
 
-bool isCoprime(short a, short b){
+bool isCoprime(short a, short b){ // a,b 是否互質
     while(b != 0){
 
         short tmp = a % b;
@@ -18,7 +18,7 @@ bool isCoprime(short a, short b){
 }
 
 
-short chooseCoprime(short p, short row){
+short chooseCoprime(short p, short row){ // 以row當seed 找出 <p 並與p互質的數
     short a = (p/3 + row) % p;
     while(1){
         if(isCoprime(p,a)){
@@ -29,7 +29,7 @@ short chooseCoprime(short p, short row){
     return a;
 }
 
-short **Transpose(short **A, int row, int col){
+short **Transpose(short **A, int row, int col){ // Blue 專用
     short **newp = new short*[col];
     for (short i = 0; i < col; i++) {
         newp[i] = new short[row]{0};
@@ -44,7 +44,7 @@ short **Transpose(short **A, int row, int col){
     return newp;
 }
 
-void shiftRow(short **A, int row, int col){
+void shiftRow(short **A, int row, int col){ // 仿造AES
 
     for(short i = 0 ; i < row ; i++){
         short a = chooseCoprime(col, i);
@@ -69,15 +69,9 @@ void shuffle(int **A, int row, int col){
 int main()
 {
     short row,col;
-    //string filename("CowRol")
-    ifstream f,fR,fG,fB;
-    f.open("RowCol.txt");
-    f >> row >> col;
-    f.close();
-    fR.open("R.txt");
-    fG.open("G.txt");
-    fB.open("B.txt");
-    
+    ifstream f,fRGB;
+    fRGB.open("RGB.txt");
+    fRGB >> row >> col ;
     short **R = new short*[row];
     short **G = new short*[row];
     short **B = new short*[row];
@@ -86,17 +80,15 @@ int main()
         G[i] = new short[col]{0};
         B[i] = new short[col]{0};
     }
-    cout << row << col <<endl;
+
     for(short i = 0; i < row ; i++){
         for(short j = 0 ; j < col; j++){
-            fR >> R[i][j];
-            fG >> G[i][j];
-            fB >> B[i][j];
+            fRGB >> R[i][j];
+            fRGB >> G[i][j];
+            fRGB >> B[i][j];
         }
     }
-    fR.close();
-    fG.close();
-    fB.close();
+    fRGB.close();
     shiftRow(R, row, col);
     B = Transpose(B, row, col);
     shiftRow(B, col, row);
