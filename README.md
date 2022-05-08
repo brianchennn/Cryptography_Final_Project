@@ -10,13 +10,8 @@
 python 版本為 3.10 太老可能 pillow 無法裝
 
 - Windows:
-先下載套件
 ```$ pip3 install pillow```
-執行
 ```$ python jpg2array.py```
-=> 產生 RGB.txt
-=> 丟進 Encrypt.cpp
-編譯
 ```$ g++ Encrypt.cpp```
 ```$ ./a.exe```
 
