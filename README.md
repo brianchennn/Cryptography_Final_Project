@@ -21,6 +21,10 @@ python 版本為 3.10 太老可能 pillow 無法裝
 ```$ g++ Encrypt.cpp```
 ```$ ./a.out plaintext.txt```
 
-- ```random_output.txt``` 
-  - 這個檔案就是經過shiftRow,shiftColumn,convolution 所形成的 RGB 2D array
-  - 格式為 R,G,B,R,G,B....
+- Temporary File
+  - RGB.txt
+    - jpg2array.py 產生出來的 RGB bitmap
+  - random_output.txt
+    - 這個檔案就是經過shiftRow,shiftColumn,convolution 所形成的 RGB 2D array
+    - 格式為 R,G,B,R,G,B....
+ 
