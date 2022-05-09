@@ -116,10 +116,7 @@ short **convolution(short **A, short *kernel_33, int row, int col){
         delete A[i];
     }
     return output;
-    /*for(int i = 0 ; i < row ; i++){
-        A[i] = output[i];
-        delete output[i];
-    }*/
+
 }
 
 void shuffle(short arr[], short n, unsigned seed){
@@ -160,7 +157,6 @@ double entropy(vector<int> v, int total){
             break;
         entropy -= ((double)v[i]/(double)total) * log2((double)v[i]/(double)total);
     }
-
     return entropy;
 }
 
@@ -184,7 +180,7 @@ int find_max_entropy_pos(short *A, int A_length, int plaintext_length){
             max_entropy_pos = i - plaintext_length + 1;
         }
     }
-    //cout << "Max entropy: "<<max_entropy<<endl;
+    cout << "Maximum entropy: "<<max_entropy<<endl;
     return max_entropy_pos;
 }
 
@@ -197,7 +193,7 @@ int main(int argc, char *argv[])
     ifstream f,fRGB,fpt;
     fpt.open(argv[1],ios::binary);
     while(fpt.get(c)){
-        //cout << short(c) << endl;
+        cout << short(c) << endl;
         plaintext.push_back(int(c));
     }
     /*for(int i = 0 ; i < plaintext.size() ;i ++){
@@ -238,7 +234,7 @@ int main(int argc, char *argv[])
     short kernel1[9] = {2,3,5,7,11,13,17,19,23};
     unsigned int seed = 1;
 
-    
+    cout << "Processing Red" <<endl;
     shuffle(kernel1, 9, seed++);
     R = shiftRow(R, row, col);
     R = shuffleRow(R, row, col, seed);
@@ -247,6 +243,7 @@ int main(int argc, char *argv[])
     R = Transpose(Rt, col, row);
     R = convolution(R, kernel1, row, col);
     
+    cout << "Processing Green" <<endl;
     shuffle(kernel1, 9, seed++);
     G = shiftRow(G, row, col);
     Gt = Transpose(G, row, col);
@@ -254,6 +251,7 @@ int main(int argc, char *argv[])
     G = Transpose(Gt, col, row);
     G = convolution(G, kernel1, row, col);
     
+    cout << "Processing Blue" <<endl;
     shuffle(kernel1, 9, seed++);
     B = shiftRow(B, row, col);
     Bt = Transpose(B, row, col);
@@ -265,25 +263,25 @@ int main(int argc, char *argv[])
     fout.open("random_output.txt");
     short *_1DArray = new short[3*row*col];
     for(int i = 0; i < row ; i++){
-        //cout << i <<endl;
+ 
         for(int j = 0 ; j < col; j++){
-            //cout << col * i + j << " ";
             fout << R[i][j] << " " << G[i][j] << " " << G[i][j]  << " ";
             _1DArray[3*(i*col+j)] = R[i][j];
             _1DArray[3*(i*col+j)+1] = G[i][j];
             _1DArray[3*(i*col+j)+2] = B[i][j];
         }
-        //cout << 1 <<endl;
+
         fout << endl;
     }
+    cout << "Calculating entropy " << endl;
     int max_entropy_pos = find_max_entropy_pos(_1DArray, 3*row*col, plaintext.size());
-    //cout << "Position: " << max_entropy_pos << endl;
+    cout << "Max Entropy Position: "<< max_entropy_pos <<endl;
     vector<int> cipher(plaintext.size(),0);
     ofstream fc;
-    fc.open("cipher2.txt",ios::binary);
+    fc.open("cipher.txt",ios::binary);
     for(int i = 0 ; i < plaintext.size() ; i++){
         cipher[i] = plaintext[i] ^ _1DArray[max_entropy_pos + i];
-        cout << char(cipher[i]) ;
+        cout << cipher[i] << endl;
         fc << char(cipher[i]);
     }
     fc.close();
