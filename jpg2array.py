@@ -3,12 +3,13 @@ from PIL import Image
 import numpy as np
 import os
 
-im = Image.open("ayaka.jpg")
-col,row =  im.size
+im = Image.open("Black.jpg")
+row,col =  im.size
+print(col,row)
 pixels = im.load()
 
 f = open("RGB.txt","w")
-f.write("%d %d"%(row,col))
+f.write("%d %d "%(row,col))
 
 for i in range(row):
     for j in range(col):
