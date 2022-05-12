@@ -9,7 +9,6 @@ using namespace std;
 
 bool isCoprime(short a, short b){ // a,b 是否互質
     while(b != 0){
-
         short tmp = a % b;
         a = b;
         b = tmp;
@@ -34,19 +33,14 @@ short chooseCoprime(short p, short row){ // 以row當seed 找出 <p 並與p互�
 
 short **Transpose(short **A, int row, int col){ // Blue 專用
 
-    short **newp = new short*[col];
+    short **output = new short*[col];
     for (short i = 0; i < col; i++) {
-        newp[i] = new short[row]{0};
+        output[i] = new short[row]{0};
         for(short j = 0; j < row; j++){
-            newp[i][j] = A[j][i];
+            output[i][j] = A[j][i];
         }
     }
-    for(int i = 0 ; i < row ; i++){
-        delete A[i];
-    }
-    return newp;
-    
-
+    return output;
 }
 
 short **shiftRow(short **A, int row, int col){ // 仿造AES
@@ -58,10 +52,8 @@ short **shiftRow(short **A, int row, int col){ // 仿造AES
         short *newRow = new short[col];
         
         for(int j = 0 ; j < col ; j++){
-            newRow[(a * j + b)%col] = A[i][j];
-            
+            newRow[(a * j + b)%col] = A[i][j];   
         }
-
         delete A[i];
         A[i] = newRow;
     }
@@ -81,7 +73,7 @@ short **shuffleRow(short **A, int row, int col, int seed){
     a = Coprimes[seed % Coprimes.size()];
     b = (seed + row/2)%row;
     for(int i = 0 ; i < row ; i++){
-        output[(a*i+b)%row] = A[i];
+        output[(a * i + b) % row] = A[i];
     }
     for(int i = 0 ; i < row ; i++){
         delete A[i];
@@ -203,11 +195,21 @@ std::string getOsName()
     #endif
 }           
 
+void ProcessColor(short **Color, short **ColorTranspose, int row, int col, short *kernel, unsigned seed){
+    shuffle(kernel, 9, seed++);
+    Color = shiftRow(Color, row, col);
+    Color = shuffleRow(Color, row, col, seed);
+    ColorTranspose = Transpose(Color, row, col);
+    ColorTranspose = shiftRow(ColorTranspose,col,row);
+    Color = Transpose(ColorTranspose, col, row);
+    Color = convolution(Color, kernel, row, col);
+}
+
 int main(int argc, char *argv[])
 {
     
     if(argc != 4){
-        printf("Usage:\n  %s plaintext.txt cipher.txt picture.jpg\n", argv[0]);
+        printf("Usage:\n  $ %s plaintext.txt cipher.txt image.jpg\nQuit\n", argv[0]);
         return 1;
     }
     string py_cmd;
@@ -268,46 +270,26 @@ int main(int argc, char *argv[])
     }
     fRGB.close();
     
-    short kernel1[9] = {2,3,5,7,11,13,17,19,23};
     unsigned int seed = 1;
+    short kernel1[9] = {2,3,5,7,11,13,17,19,23};
 
     cout << "Processing Red" <<endl;
-    shuffle(kernel1, 9, seed++);
-    R = shiftRow(R, row, col);
-    R = shuffleRow(R, row, col, seed);
-    Rt = Transpose(R, row, col);
-    Rt = shiftRow(Rt,col,row);
-    R = Transpose(Rt, col, row);
-    R = convolution(R, kernel1, row, col);
-    
+    ProcessColor(R,Rt,row,col,kernel1,seed);
     cout << "Processing Green" <<endl;
-    shuffle(kernel1, 9, seed++);
-    G = shiftRow(G, row, col);
-    Gt = Transpose(G, row, col);
-    Gt = shiftRow(Gt,col,row);
-    G = Transpose(Gt, col, row);
-    G = convolution(G, kernel1, row, col);
-    
+    ProcessColor(G,Gt,row,col,kernel1,seed);
     cout << "Processing Blue" <<endl;
-    shuffle(kernel1, 9, seed++);
-    B = shiftRow(B, row, col);
-    Bt = Transpose(B, row, col);
-    Bt = shiftRow(Bt,col,row);
-    B = Transpose(Bt, col, row);
-    B = convolution(B, kernel1, row, col);
+    ProcessColor(B,Bt,row,col,kernel1,seed);
 
     ofstream fout;
     fout.open("random_output.txt");
     short *_1DArray = new short[3*row*col];
     for(int i = 0; i < row ; i++){
- 
         for(int j = 0 ; j < col; j++){
             fout << R[i][j] << " " << G[i][j] << " " << G[i][j]  << " ";
             _1DArray[3*(i*col+j)] = R[i][j];
             _1DArray[3*(i*col+j)+1] = G[i][j];
             _1DArray[3*(i*col+j)+2] = B[i][j];
         }
-
         fout << endl;
     }
     cout << "Calculating entropy " << endl;
@@ -322,5 +304,5 @@ int main(int argc, char *argv[])
         fc << char(cipher[i]);
     }
     fc.close();
-    cout << "\n end\n"<<endl;
+    cout << "\nWrite to "<< argv[2] << "\nEnd program\n"<<endl;
 }
