@@ -151,10 +151,10 @@ short *flatten(short **A, int row, int col){
 }
 
 double entropy(vector<int> v, int total){
-    double entropy = 0.0;
+    double entropy = 0.0f;
     for(int i = 0 ; i < v.size() ; i++){
         if(v[i] == 0)
-            break;
+            continue;
         entropy -= ((double)v[i]/(double)total) * log2((double)v[i]/(double)total);
     }
     return entropy;
@@ -174,7 +174,7 @@ int find_max_entropy_pos(short *A, int A_length, int plaintext_length){
 
         frequency[A[i-plaintext_length]]--;
         frequency[A[i]]++;
-        float Entropy = entropy(frequency,plaintext_length);
+        double Entropy = entropy(frequency,plaintext_length);
         if(max_entropy < Entropy){
             max_entropy = Entropy;
             max_entropy_pos = i - plaintext_length + 1;
@@ -205,7 +205,7 @@ std::string getOsName()
 
 int main(int argc, char *argv[])
 {
-    
+    std::time_t t1 = std::time(nullptr);
     if(argc != 4){
         printf("Usage:\n  %s plaintext.txt cipher.txt picture.jpg\n", argv[0]);
         return 1;
@@ -229,10 +229,13 @@ int main(int argc, char *argv[])
     char c;
     ifstream f,fRGB,fpt;
     fpt.open(argv[1],ios::binary);
+    int count = 0 ;
     while(fpt.get(c)){
+        count ++;
         //cout << short(c) << endl;
         plaintext.push_back(int(c));
     }
+    cout << "Plaintext Length: " << count << endl;
     /*for(int i = 0 ; i < plaintext.size() ;i ++){
         cout << plaintext[i] <<endl;
     }*/
@@ -322,5 +325,7 @@ int main(int argc, char *argv[])
         fc << char(cipher[i]);
     }
     fc.close();
+    std::time_t t2 = std::time(nullptr);
+    cout << "Time: "<< int(t2-t1) << endl;
     cout << "\n end\n"<<endl;
 }
