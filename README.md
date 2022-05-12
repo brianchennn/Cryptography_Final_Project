@@ -10,16 +10,14 @@
 python 版本為 3.10 太老可能 pillow 無法裝
 
 - Windows:
-  - ```$ pip3 install pillow``` 缺甚麼裝甚麼
-  - ```$ python jpg2array.py``` 產生 RGB.txt
+  - ```$ pip3 install pillow numpy``` 缺甚麼裝甚麼
   - ```$ g++ Encrypt.cpp``` 編譯
-  - ```$ ./a.exe plaintext.txt```
+  - ```$ ./a.exe plaintext.txt cipher.txt image.jpg```
 
 - Linux
-  - ```$ pip3 install pillow``` 缺甚麼裝甚麼
-  - ```$ python3 jpg2array.py``` 產生 RGB.txt
+  - ```$ pip3 install pillow numpy``` 缺甚麼裝甚麼
   - ```$ g++ Encrypt.cpp``` 編譯
-  - ```$ ./a.out plaintext.txt```
+  - ```$ ./a.out plaintext.txt  cipher.txt image.jpg```
 
 - Temporary File
   - RGB.txt

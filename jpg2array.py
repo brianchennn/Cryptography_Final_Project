@@ -6,7 +6,7 @@ import sys
 
 im = Image.open(sys.argv[1])
 row,col =  im.size
-print(col,row)
+print("Image Size: %d x %d"%(col,row))
 pixels = im.load()
 
 f = open("RGB.txt","w")
