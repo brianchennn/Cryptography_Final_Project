@@ -2,8 +2,9 @@
 from PIL import Image
 import numpy as np
 import os
+import sys
 
-im = Image.open("Black.jpg")
+im = Image.open(sys.argv[1])
 row,col =  im.size
 print(col,row)
 pixels = im.load()

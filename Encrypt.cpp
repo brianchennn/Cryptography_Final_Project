@@ -184,8 +184,45 @@ int find_max_entropy_pos(short *A, int A_length, int plaintext_length){
     return max_entropy_pos;
 }
 
+std::string getOsName()
+{
+    #ifdef _WIN32
+    return "Windows 32-bit";
+    #elif _WIN64
+    return "Windows 64-bit";
+    #elif __APPLE__ || __MACH__
+    return "Mac OSX";
+    #elif __linux__
+    return "Linux";
+    #elif __FreeBSD__
+    return "FreeBSD";
+    #elif __unix || __unix__
+    return "Unix";
+    #else
+    return "Other";
+    #endif
+}           
+
 int main(int argc, char *argv[])
 {
+    
+    if(argc != 4){
+        printf("Usage:\n  %s plaintext.txt cipher.txt picture.jpg\n", argv[0]);
+        return 1;
+    }
+    string py_cmd;
+    string OS = getOsName();
+
+    
+    if(OS.find("Win") != string::npos){
+        py_cmd = "python jpg2array.py " + string(argv[3]);
+        system(py_cmd.c_str());
+
+    }else{
+        py_cmd = "python3 jpg2array.py " + string(argv[3]);
+        system(py_cmd.c_str());
+    }
+    
     
     short row,col;
     vector<uint8_t> plaintext;
@@ -193,7 +230,7 @@ int main(int argc, char *argv[])
     ifstream f,fRGB,fpt;
     fpt.open(argv[1],ios::binary);
     while(fpt.get(c)){
-        cout << short(c) << endl;
+        //cout << short(c) << endl;
         plaintext.push_back(int(c));
     }
     /*for(int i = 0 ; i < plaintext.size() ;i ++){
@@ -278,10 +315,10 @@ int main(int argc, char *argv[])
     cout << "Max Entropy Position: "<< max_entropy_pos <<endl;
     vector<int> cipher(plaintext.size(),0);
     ofstream fc;
-    fc.open("cipher.txt",ios::binary);
+    fc.open(argv[2],ios::binary);
     for(int i = 0 ; i < plaintext.size() ; i++){
         cipher[i] = plaintext[i] ^ _1DArray[max_entropy_pos + i];
-        cout << cipher[i] << endl;
+        //cout << cipher[i] << endl;
         fc << char(cipher[i]);
     }
     fc.close();
