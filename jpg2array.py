@@ -1,9 +1,9 @@
 # https://stackoverflow.com/questions/27026866/convert-an-image-to-2d-array-in-python
 from PIL import Image
 import numpy as np
-import os
+import os, sys
 
-im = Image.open("Black.jpg")
+im = Image.open(sys.argv[1])
 row,col =  im.size
 print(col,row)
 pixels = im.load()

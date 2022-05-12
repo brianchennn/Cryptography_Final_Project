@@ -34,17 +34,14 @@ short chooseCoprime(short p, short row){ // 以row當seed 找出 <p 並與p互�
 
 short **Transpose(short **A, int row, int col){ // Blue 專用
 
-    short **newp = new short*[col];
+    short **output = new short*[col];
     for (short i = 0; i < col; i++) {
-        newp[i] = new short[row]{0};
+        output[i] = new short[row]{0};
         for(short j = 0; j < row; j++){
-            newp[i][j] = A[j][i];
+            output[i][j] = A[j][i];
         }
     }
-    for(int i = 0 ; i < row ; i++){
-        delete A[i];
-    }
-    return newp;
+    return output;
     
 
 }
@@ -157,7 +154,7 @@ double entropy(vector<int> v, int total){
     double entropy = 0.0;
     for(int i = 0 ; i < v.size() ; i++){
         if(v[i] == 0)
-            break;
+            continue;
         entropy -= ((double)v[i]/(double)total) * log2((double)v[i]/(double)total);
     }
 
@@ -183,14 +180,52 @@ int find_max_entropy_pos(short *A, int A_length, int plaintext_length){
             max_entropy = Entropy;
             max_entropy_pos = i - plaintext_length + 1;
         }
+        if(max_entropy > 5.0f){
+            break;
+        }
     }
     //cout << "Max entropy: "<<max_entropy<<endl;
     return max_entropy_pos;
 }
 
+std::string getOsName()
+{
+    #ifdef _WIN32
+    return "Windows 32-bit";
+    #elif _WIN64
+    return "Windows 64-bit";
+    #elif __APPLE__ || __MACH__
+    return "Mac OSX";
+    #elif __linux__
+    return "Linux";
+    #elif __FreeBSD__
+    return "FreeBSD";
+    #elif __unix || __unix__
+    return "Unix";
+    #else
+    return "Other";
+    #endif
+}     
+
 int main(int argc, char *argv[])
 {
-    
+    std::time_t t1 = std::time(nullptr);
+    if(argc != 4){
+        printf("Usage:\n  $ %s plaintext.txt cipher.txt image.jpg\nQuit\n", argv[0]);
+        return 1;
+    }
+    string py_cmd;
+    string OS = getOsName();
+
+    if(OS.find("Win") != string::npos){
+        py_cmd = "python jpg2array.py " + string(argv[3]);
+        system(py_cmd.c_str());
+
+    }else{
+        py_cmd = "python3 jpg2array.py " + string(argv[3]);
+        system(py_cmd.c_str());
+    }
+
     short row,col;
     vector<uint8_t> plaintext;
     char c;
@@ -280,10 +315,10 @@ int main(int argc, char *argv[])
     //cout << "Position: " << max_entropy_pos << endl;
     vector<int> cipher(plaintext.size(),0);
     ofstream fc;
-    fc.open("cipher2.txt",ios::binary);
+    fc.open(argv[2],ios::binary);
     for(int i = 0 ; i < plaintext.size() ; i++){
         cipher[i] = plaintext[i] ^ _1DArray[max_entropy_pos + i];
-        cout << char(cipher[i]) ;
+        //cout << char(cipher[i]) ;
         fc << char(cipher[i]);
     }
     fc.close();
