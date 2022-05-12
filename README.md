@@ -10,17 +10,21 @@
 python 版本為 3.10 太老可能 pillow 無法裝
 
 - Windows:
-```$ pip3 install pillow```
-```$ python jpg2array.py```
-```$ g++ Encrypt.cpp```
-```$ ./a.exe plaintext.txt```
+  - ```$ pip3 install pillow``` 缺甚麼裝甚麼
+  - ```$ python jpg2array.py``` 產生 RGB.txt
+  - ```$ g++ Encrypt.cpp``` 編譯
+  - ```$ ./a.exe plaintext.txt```
 
 - Linux
-```$ pip3 install pillow```
-```$ python3 jpg2array.py```
-```$ g++ Encrypt.cpp```
-```$ ./a.out plaintext.txt```
+  - ```$ pip3 install pillow``` 缺甚麼裝甚麼
+  - ```$ python3 jpg2array.py``` 產生 RGB.txt
+  - ```$ g++ Encrypt.cpp``` 編譯
+  - ```$ ./a.out plaintext.txt```
 
-- ```random_output.txt``` 
-  - 這個檔案就是經過shiftRow,shiftColumn,convolution 所形成的 RGB 2D array
-  - 格式為 R,G,B,R,G,B....
+- Temporary File
+  - RGB.txt
+    - jpg2array.py 產生出來的 RGB bitmap
+  - random_output.txt
+    - 這個檔案就是經過 shiftRow,shiftColumn,convolution 所形成的 RGB 2D array
+    - 格式為 R,G,B,R,G,B.... 沒有換行符號
+ 
