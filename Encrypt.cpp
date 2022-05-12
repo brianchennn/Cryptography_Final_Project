@@ -6,10 +6,12 @@
 #include <vector>
 #include <cmath>
 using namespace std;
+typedef uint8_t _8b; 
 
-bool isCoprime(short a, short b){ // a,b 是否互質
+bool isCoprime(int a, int b){ // a,b 是否互質
     while(b != 0){
-        short tmp = a % b;
+
+        int tmp = a % b;
         a = b;
         b = tmp;
         if(b == 1){
@@ -20,8 +22,8 @@ bool isCoprime(short a, short b){ // a,b 是否互質
 }
 
 
-short chooseCoprime(short p, short row){ // 以row當seed 找出 <p 並與p互質的數
-    short a = (p/3 + row) % p;
+int chooseCoprime(int p, int row){ // 以row當seed 找出 <p 並與p互質的數
+    int a = (p/3 + row) % p;
     while(1){
         if(isCoprime(p,a)){
             return a;
@@ -31,43 +33,42 @@ short chooseCoprime(short p, short row){ // 以row當seed 找出 <p 並與p互�
     return a;
 }
 
-short **Transpose(short **A, int row, int col){ // Blue 專用
+_8b **Transpose(_8b **A, int row, int col){ // Blue 專用
 
-    short **output = new short*[col];
-    for (short i = 0; i < col; i++) {
-        output[i] = new short[row]{0};
-        for(short j = 0; j < row; j++){
+    _8b **output = new _8b*[col];
+    for (int i = 0; i < col; i++) {
+        output[i] = new _8b[row]{0};
+        for(int j = 0; j < row; j++){
             output[i][j] = A[j][i];
         }
     }
     return output;
-<<<<<<< HEAD
     
 
-=======
->>>>>>> legacy
 }
 
-short **shiftRow(short **A, int row, int col){ // 仿造AES
+_8b **shiftRow(_8b **A, int row, int col){ // 仿造AES
 
-    for(short i = 0 ; i < row ; i++){
+    for(int i = 0 ; i < row ; i++){
         
-        short a = chooseCoprime(col, i);
-        short b = i; 
-        short *newRow = new short[col];
+        int a = chooseCoprime(col, i);
+        int b = i; 
+        _8b *newRow = new _8b[col];
         
         for(int j = 0 ; j < col ; j++){
-            newRow[(a * j + b)%col] = A[i][j];   
+            newRow[(a * j + b)%col] = A[i][j];
+            
         }
+
         delete A[i];
         A[i] = newRow;
     }
     return A;
 }
 
-short **shuffleRow(short **A, int row, int col, int seed){
+_8b **shuffleRow(_8b **A, int row, int col, int seed){
 
-    short **output = new short*[row];
+    _8b **output = new _8b*[row];
     vector<int> Coprimes;
     for(int i = 0 ; i < row ; i++){
         if(isCoprime(i,row)){
@@ -78,7 +79,7 @@ short **shuffleRow(short **A, int row, int col, int seed){
     a = Coprimes[seed % Coprimes.size()];
     b = (seed + row/2)%row;
     for(int i = 0 ; i < row ; i++){
-        output[(a * i + b) % row] = A[i];
+        output[(a*i+b)%row] = A[i];
     }
     for(int i = 0 ; i < row ; i++){
         delete A[i];
@@ -87,15 +88,15 @@ short **shuffleRow(short **A, int row, int col, int seed){
 
 }
 
-short **convolution(short **A, short *kernel_33, int row, int col){
+_8b **convolution(_8b **A, _8b *kernel_33, int row, int col){
 
-    short **output = new short*[row];
-    for (short i = 0; i < row; i++) {
-        output[i] = new short[col]{0};
+    _8b **output = new _8b*[row];
+    for (int i = 0; i < row; i++) {
+        output[i] = new _8b[col]{0};
     }
     for(int i = 0 ; i < row ; i++){
         for(int j = 0 ; j < col ; j++){
-            short sum = 0;
+            int sum = 0;
             for(int k = 0 ; k < 3 ; k++){
                 for(int l = 0 ; l < 3 ; l++){
                     if(i+k-1 >= 0 && i+k-1 < row && j+l-1 >= 0 && j+l-1 < col){
@@ -113,12 +114,15 @@ short **convolution(short **A, short *kernel_33, int row, int col){
         delete A[i];
     }
     return output;
-
+    /*for(int i = 0 ; i < row ; i++){
+        A[i] = output[i];
+        delete output[i];
+    }*/
 }
 
-void shuffle(short arr[], short n, unsigned seed){
+void shuffle(_8b arr[], _8b n, unsigned seed){
     /*TODO*/
-    short newarr[n];
+    _8b newarr[n];
     vector<int> Coprimes;
     for(int i = 0 ; i < n ; i++){
         if(isCoprime(i,n)){
@@ -137,29 +141,21 @@ void shuffle(short arr[], short n, unsigned seed){
 
 }
 
-short *flatten(short **A, int row, int col){
-    short *output = new short[row*col];
-    for(int i = 0 ; i < row ; i++){
-        for(int j = 0 ; j < col ; j++){
-            output[i*col+j] = A[i][j];
-        }
-    }
-    return output;
-}
 
 double entropy(vector<int> v, int total){
-    double entropy = 0.0f;
+    double entropy = 0.0;
     for(int i = 0 ; i < v.size() ; i++){
         if(v[i] == 0)
             continue;
         entropy -= ((double)v[i]/(double)total) * log2((double)v[i]/(double)total);
     }
+
     return entropy;
 }
 
-int find_max_entropy_pos(short *A, int A_length, int plaintext_length){
+int find_max_entropy_pos(_8b *A, int A_length, int plaintext_length){
     
-    float max_entropy;
+    double max_entropy;
     int max_entropy_pos;
     vector<int> frequency(256,0);
     for(int i = 0 ; i < plaintext_length ; i++){
@@ -171,16 +167,17 @@ int find_max_entropy_pos(short *A, int A_length, int plaintext_length){
 
         frequency[A[i-plaintext_length]]--;
         frequency[A[i]]++;
-        double Entropy = entropy(frequency,plaintext_length);
+        float Entropy = entropy(frequency,plaintext_length);
         if(max_entropy < Entropy){
             max_entropy = Entropy;
             max_entropy_pos = i - plaintext_length + 1;
         }
+        cout << max_entropy <<endl;
         if(max_entropy > 5.0f){
             break;
         }
     }
-    cout << "Maximum entropy: "<<max_entropy<<endl;
+    //cout << "Max entropy: "<<max_entropy<<endl;
     return max_entropy_pos;
 }
 
@@ -201,21 +198,7 @@ std::string getOsName()
     #else
     return "Other";
     #endif
-<<<<<<< HEAD
 }     
-=======
-}           
-
-void ProcessColor(short **Color, short **ColorTranspose, int row, int col, short *kernel, unsigned seed){
-    shuffle(kernel, 9, seed++);
-    Color = shiftRow(Color, row, col);
-    Color = shuffleRow(Color, row, col, seed);
-    ColorTranspose = Transpose(Color, row, col);
-    ColorTranspose = shiftRow(ColorTranspose,col,row);
-    Color = Transpose(ColorTranspose, col, row);
-    Color = convolution(Color, kernel, row, col);
-}
->>>>>>> legacy
 
 int main(int argc, char *argv[])
 {
@@ -227,10 +210,6 @@ int main(int argc, char *argv[])
     string py_cmd;
     string OS = getOsName();
 
-<<<<<<< HEAD
-=======
-    
->>>>>>> legacy
     if(OS.find("Win") != string::npos){
         py_cmd = "python jpg2array.py " + string(argv[3]);
         system(py_cmd.c_str());
@@ -239,51 +218,45 @@ int main(int argc, char *argv[])
         py_cmd = "python3 jpg2array.py " + string(argv[3]);
         system(py_cmd.c_str());
     }
-<<<<<<< HEAD
 
-=======
-    
-    
->>>>>>> legacy
-    short row,col;
-    vector<uint8_t> plaintext;
+    int row,col;
+    vector<_8b> plaintext;
     char c;
     ifstream f,fRGB,fpt;
     fpt.open(argv[1],ios::binary);
-    int count = 0 ;
+    int count = 0;
     while(fpt.get(c)){
-        count ++;
-        //cout << short(c) << endl;
-        plaintext.push_back(int(c));
+        count++;
+        cout << short(c) << endl;
+        plaintext.push_back(_8b(c));
     }
-    cout << "Plaintext Length: " << count << endl;
+    cout << "count " << count << endl;
     /*for(int i = 0 ; i < plaintext.size() ;i ++){
         cout << plaintext[i] <<endl;
     }*/
     
     fRGB.open("RGB.txt");
     fRGB >> row >> col ;
-    short **R = new short*[row];
-    short **G = new short*[row];
-    short **B = new short*[row];
-    short **Rt = new short*[col];
-    short **Gt = new short*[col];
-    short **Bt = new short*[col];
-    for (short i = 0; i < row; i++) {
-        R[i] = new short[col]{0};
-        G[i] = new short[col]{0};
-        B[i] = new short[col]{0};
+    _8b **R = new _8b*[row];
+    _8b **G = new _8b*[row];
+    _8b **B = new _8b*[row];
+    _8b **Rt = new _8b*[col];
+    _8b **Gt = new _8b*[col];
+    _8b **Bt = new _8b*[col];
+    for (int i = 0; i < row; i++) {
+        R[i] = new _8b[col]{0};
+        G[i] = new _8b[col]{0};
+        B[i] = new _8b[col]{0};
     }
-    for (short i = 0; i < col; i++) {
-        Rt[i] = new short[row]{0};
-        Gt[i] = new short[row]{0};
-        Bt[i] = new short[row]{0};
+    for (int i = 0; i < col; i++) {
+        Rt[i] = new _8b[row]{0};
+        Gt[i] = new _8b[row]{0};
+        Bt[i] = new _8b[row]{0};
     }
     
     
-    for(short i = 0; i < row ; i++){
-
-        for(short j = 0 ; j < col; j++){
+    for(int i = 0; i < row ; i++){
+        for(int j = 0 ; j < col; j++){
             fRGB >> R[i][j];
             fRGB >> G[i][j];
             fRGB >> B[i][j];
@@ -292,45 +265,60 @@ int main(int argc, char *argv[])
     }
     fRGB.close();
     
+    _8b kernel1[9] = {2,3,5,7,11,13,17,19,23};
     unsigned int seed = 1;
-    short kernel1[9] = {2,3,5,7,11,13,17,19,23};
 
-    cout << "Processing Red" <<endl;
-    ProcessColor(R,Rt,row,col,kernel1,seed);
-    cout << "Processing Green" <<endl;
-    ProcessColor(G,Gt,row,col,kernel1,seed);
-    cout << "Processing Blue" <<endl;
-    ProcessColor(B,Bt,row,col,kernel1,seed);
+    cout << "Processing Red\n";
+    shuffle(kernel1, 9, seed++);
+    R = shiftRow(R, row, col);
+    R = shuffleRow(R, row, col, seed);
+    Rt = Transpose(R, row, col);
+    Rt = shiftRow(Rt,col,row);
+    R = Transpose(Rt, col, row);
+    R = convolution(R, kernel1, row, col);
+    cout << "Processing Green\n";
+    shuffle(kernel1, 9, seed++);
+    G = shiftRow(G, row, col);
+    Gt = Transpose(G, row, col);
+    Gt = shiftRow(Gt,col,row);
+    G = Transpose(Gt, col, row);
+    G = convolution(G, kernel1, row, col);
+    cout << "Processing Blue\n";
+    shuffle(kernel1, 9, seed++);
+    B = shiftRow(B, row, col);
+    Bt = Transpose(B, row, col);
+    Bt = shiftRow(Bt,col,row);
+    B = Transpose(Bt, col, row);
+    B = convolution(B, kernel1, row, col);
 
     ofstream fout;
     fout.open("random_output.txt");
-    short *_1DArray = new short[3*row*col];
+    _8b *_1DArray = new _8b[3*row*col];
     for(int i = 0; i < row ; i++){
+        //cout << i <<endl;
         for(int j = 0 ; j < col; j++){
+            //cout << col * i + j << " ";
             fout << R[i][j] << " " << G[i][j] << " " << G[i][j]  << " ";
             _1DArray[3*(i*col+j)] = R[i][j];
             _1DArray[3*(i*col+j)+1] = G[i][j];
             _1DArray[3*(i*col+j)+2] = B[i][j];
         }
+        //cout << 1 <<endl;
         fout << endl;
     }
-    cout << "Calculating entropy " << endl;
     int max_entropy_pos = find_max_entropy_pos(_1DArray, 3*row*col, plaintext.size());
-    cout << "Max Entropy Position: "<< max_entropy_pos <<endl;
-    vector<int> cipher(plaintext.size(),0);
+    //cout << "Position: " << max_entropy_pos << endl;
+    vector<_8b> cipher(plaintext.size(),0);
     ofstream fc;
-    fc.open(argv[2],ios::binary);
+    fc.open(argv[2], ios::binary);
     for(int i = 0 ; i < plaintext.size() ; i++){
         cipher[i] = plaintext[i] ^ _1DArray[max_entropy_pos + i];
-<<<<<<< HEAD
-        //cout << char(cipher[i]) ;
-=======
-        //cout << cipher[i] << endl;
->>>>>>> legacy
-        fc << char(cipher[i]);
+        //cout << short(plaintext[i]) << " " << _1DArray[max_entropy_pos + i] << endl;
+        //cout << short(cipher[i]) ;
+        fc << _8b(cipher[i]);
     }
     fc.close();
     std::time_t t2 = std::time(nullptr);
-    cout << "Time: "<< int(t2-t1) << endl;
+    cout << "Time: "<< t2-t1 <<" sec "<<endl;
     cout << "\n end\n"<<endl;
 }
