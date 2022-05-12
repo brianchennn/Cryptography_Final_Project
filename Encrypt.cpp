@@ -9,7 +9,6 @@ using namespace std;
 
 bool isCoprime(short a, short b){ // a,b 是否互質
     while(b != 0){
-
         short tmp = a % b;
         a = b;
         b = tmp;
@@ -42,8 +41,11 @@ short **Transpose(short **A, int row, int col){ // Blue 專用
         }
     }
     return output;
+<<<<<<< HEAD
     
 
+=======
+>>>>>>> legacy
 }
 
 short **shiftRow(short **A, int row, int col){ // 仿造AES
@@ -55,10 +57,8 @@ short **shiftRow(short **A, int row, int col){ // 仿造AES
         short *newRow = new short[col];
         
         for(int j = 0 ; j < col ; j++){
-            newRow[(a * j + b)%col] = A[i][j];
-            
+            newRow[(a * j + b)%col] = A[i][j];   
         }
-
         delete A[i];
         A[i] = newRow;
     }
@@ -78,7 +78,7 @@ short **shuffleRow(short **A, int row, int col, int seed){
     a = Coprimes[seed % Coprimes.size()];
     b = (seed + row/2)%row;
     for(int i = 0 ; i < row ; i++){
-        output[(a*i+b)%row] = A[i];
+        output[(a * i + b) % row] = A[i];
     }
     for(int i = 0 ; i < row ; i++){
         delete A[i];
@@ -113,10 +113,7 @@ short **convolution(short **A, short *kernel_33, int row, int col){
         delete A[i];
     }
     return output;
-    /*for(int i = 0 ; i < row ; i++){
-        A[i] = output[i];
-        delete output[i];
-    }*/
+
 }
 
 void shuffle(short arr[], short n, unsigned seed){
@@ -151,13 +148,12 @@ short *flatten(short **A, int row, int col){
 }
 
 double entropy(vector<int> v, int total){
-    double entropy = 0.0;
+    double entropy = 0.0f;
     for(int i = 0 ; i < v.size() ; i++){
         if(v[i] == 0)
             continue;
         entropy -= ((double)v[i]/(double)total) * log2((double)v[i]/(double)total);
     }
-
     return entropy;
 }
 
@@ -175,7 +171,7 @@ int find_max_entropy_pos(short *A, int A_length, int plaintext_length){
 
         frequency[A[i-plaintext_length]]--;
         frequency[A[i]]++;
-        float Entropy = entropy(frequency,plaintext_length);
+        double Entropy = entropy(frequency,plaintext_length);
         if(max_entropy < Entropy){
             max_entropy = Entropy;
             max_entropy_pos = i - plaintext_length + 1;
@@ -184,7 +180,7 @@ int find_max_entropy_pos(short *A, int A_length, int plaintext_length){
             break;
         }
     }
-    //cout << "Max entropy: "<<max_entropy<<endl;
+    cout << "Maximum entropy: "<<max_entropy<<endl;
     return max_entropy_pos;
 }
 
@@ -205,7 +201,21 @@ std::string getOsName()
     #else
     return "Other";
     #endif
+<<<<<<< HEAD
 }     
+=======
+}           
+
+void ProcessColor(short **Color, short **ColorTranspose, int row, int col, short *kernel, unsigned seed){
+    shuffle(kernel, 9, seed++);
+    Color = shiftRow(Color, row, col);
+    Color = shuffleRow(Color, row, col, seed);
+    ColorTranspose = Transpose(Color, row, col);
+    ColorTranspose = shiftRow(ColorTranspose,col,row);
+    Color = Transpose(ColorTranspose, col, row);
+    Color = convolution(Color, kernel, row, col);
+}
+>>>>>>> legacy
 
 int main(int argc, char *argv[])
 {
@@ -217,6 +227,10 @@ int main(int argc, char *argv[])
     string py_cmd;
     string OS = getOsName();
 
+<<<<<<< HEAD
+=======
+    
+>>>>>>> legacy
     if(OS.find("Win") != string::npos){
         py_cmd = "python jpg2array.py " + string(argv[3]);
         system(py_cmd.c_str());
@@ -225,16 +239,24 @@ int main(int argc, char *argv[])
         py_cmd = "python3 jpg2array.py " + string(argv[3]);
         system(py_cmd.c_str());
     }
+<<<<<<< HEAD
 
+=======
+    
+    
+>>>>>>> legacy
     short row,col;
     vector<uint8_t> plaintext;
     char c;
     ifstream f,fRGB,fpt;
     fpt.open(argv[1],ios::binary);
+    int count = 0 ;
     while(fpt.get(c)){
+        count ++;
         //cout << short(c) << endl;
         plaintext.push_back(int(c));
     }
+    cout << "Plaintext Length: " << count << endl;
     /*for(int i = 0 ; i < plaintext.size() ;i ++){
         cout << plaintext[i] <<endl;
     }*/
@@ -270,57 +292,45 @@ int main(int argc, char *argv[])
     }
     fRGB.close();
     
-    short kernel1[9] = {2,3,5,7,11,13,17,19,23};
     unsigned int seed = 1;
+    short kernel1[9] = {2,3,5,7,11,13,17,19,23};
 
-    
-    shuffle(kernel1, 9, seed++);
-    R = shiftRow(R, row, col);
-    R = shuffleRow(R, row, col, seed);
-    Rt = Transpose(R, row, col);
-    Rt = shiftRow(Rt,col,row);
-    R = Transpose(Rt, col, row);
-    R = convolution(R, kernel1, row, col);
-    
-    shuffle(kernel1, 9, seed++);
-    G = shiftRow(G, row, col);
-    Gt = Transpose(G, row, col);
-    Gt = shiftRow(Gt,col,row);
-    G = Transpose(Gt, col, row);
-    G = convolution(G, kernel1, row, col);
-    
-    shuffle(kernel1, 9, seed++);
-    B = shiftRow(B, row, col);
-    Bt = Transpose(B, row, col);
-    Bt = shiftRow(Bt,col,row);
-    B = Transpose(Bt, col, row);
-    B = convolution(B, kernel1, row, col);
+    cout << "Processing Red" <<endl;
+    ProcessColor(R,Rt,row,col,kernel1,seed);
+    cout << "Processing Green" <<endl;
+    ProcessColor(G,Gt,row,col,kernel1,seed);
+    cout << "Processing Blue" <<endl;
+    ProcessColor(B,Bt,row,col,kernel1,seed);
 
     ofstream fout;
     fout.open("random_output.txt");
     short *_1DArray = new short[3*row*col];
     for(int i = 0; i < row ; i++){
-        //cout << i <<endl;
         for(int j = 0 ; j < col; j++){
-            //cout << col * i + j << " ";
             fout << R[i][j] << " " << G[i][j] << " " << G[i][j]  << " ";
             _1DArray[3*(i*col+j)] = R[i][j];
             _1DArray[3*(i*col+j)+1] = G[i][j];
             _1DArray[3*(i*col+j)+2] = B[i][j];
         }
-        //cout << 1 <<endl;
         fout << endl;
     }
+    cout << "Calculating entropy " << endl;
     int max_entropy_pos = find_max_entropy_pos(_1DArray, 3*row*col, plaintext.size());
-    //cout << "Position: " << max_entropy_pos << endl;
+    cout << "Max Entropy Position: "<< max_entropy_pos <<endl;
     vector<int> cipher(plaintext.size(),0);
     ofstream fc;
     fc.open(argv[2],ios::binary);
     for(int i = 0 ; i < plaintext.size() ; i++){
         cipher[i] = plaintext[i] ^ _1DArray[max_entropy_pos + i];
+<<<<<<< HEAD
         //cout << char(cipher[i]) ;
+=======
+        //cout << cipher[i] << endl;
+>>>>>>> legacy
         fc << char(cipher[i]);
     }
     fc.close();
+    std::time_t t2 = std::time(nullptr);
+    cout << "Time: "<< int(t2-t1) << endl;
     cout << "\n end\n"<<endl;
 }

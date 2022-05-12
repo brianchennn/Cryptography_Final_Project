@@ -1,6 +1,6 @@
-./*.txt
-./a.exe
-./a.out
-./.vscode
-./*.jpg
+cipher*.txt
+a.exe
+a.out
+.vscode
+*.jpg
 
