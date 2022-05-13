@@ -1,1 +1,7 @@
-s well as statements that initialize those definitions. Once the module code is written, it can be reused by any script that imports
+s well as statements that initial
+ize those definit
+ions. Once the mod
+ule code is written
+, it can be r
+eused by any 
+script that imports

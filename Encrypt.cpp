@@ -1,7 +1,6 @@
 #include <iostream>
 #include <fstream>
 #include <cstring>
-fewfewffew
 #include <chrono>
 #include <vector>
 #include <cmath>
@@ -147,9 +146,8 @@ float entropy(vector<int> v, int total){
     for(int i = 0 ; i < v.size() ; i++){
         if(v[i] == 0)
             continue;
-        entropy -= ((float)v[i]/(float)total) * log2((float)v[i]/(float)total);
+        entropy -= ((float)v[i]/(float)total) * (log2((float)v[i]) - log2((float)total));
     }
-
     return entropy;
 }
 
@@ -270,7 +268,7 @@ int main(int argc, char *argv[])
 
     cout << "Processing Red\n";
     shuffle(kernel1, 9, seed++);
-    /*R = shiftRow(R, row, col);
+    R = shiftRow(R, row, col);
     R = shuffleRow(R, row, col, seed);
     Rt = Transpose(R, row, col);
     Rt = shiftRow(Rt,col,row);
@@ -289,7 +287,7 @@ int main(int argc, char *argv[])
     Bt = Transpose(B, row, col);
     Bt = shiftRow(Bt,col,row);
     B = Transpose(Bt, col, row);
-    B = convolution(B, kernel1, row, col);*/
+    B = convolution(B, kernel1, row, col);
 
     ofstream fout;
     fout.open("random_output.txt");
