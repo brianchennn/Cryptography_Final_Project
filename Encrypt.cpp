@@ -304,11 +304,11 @@ int main(int argc, char *argv[])
     }
     int max_entropy_pos = find_max_entropy_pos(_1DArray, 3*row*col, plaintext.size());
     cout << "Position: " << max_entropy_pos << endl;
-    vector<_8b> cipher(plaintext.size(),0);
+    vector<_8b> cipher(plaintext.size(), 0);
     ofstream fc;
     fc.open(argv[2], ios::binary);
     for(int i = 0 ; i < plaintext.size() ; i++){
-        cipher[i] = plaintext[i] ^ _1DArray[max_entropy_pos + i];
+        cipher[i] = plaintext[i] ^ _1DArray[i];
 
         fc << _8b(cipher[i]);
     }
