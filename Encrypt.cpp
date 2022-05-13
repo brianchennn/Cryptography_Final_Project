@@ -1,67 +1,12 @@
-#include <iostream>
-#include <fstream>
-#include <cstring>
-fewfe
-#includ
-    while(1){
-        if(isCoprime(p,a)){
-            return a;
-        }
-        a = (a+1) % p;
-    }
-    return a;
-}
-
-_8b **Transpose(_8b **A, int row, int col){ // Blue 專用
-
-    _8b **output = new _8b*[col];
-    for (int i = 0; i < col; i++) {
-        output[i] = new _8b[row]{0};
-        for(int j = 0; j < row; j++){
-            output[i][j] = A[j][i];
-        }
-    }
-    return output;
-    
-
-}
-
-_8b **shiftRow(_8b **A, int row, int col){ // 仿造AES
-
-    for(int i = 0 ; i < row ; i++){
-        
-        int a = chooseCoprime(col, i);
-        int b = i; 
-        _8b *newRow = new _8b[col];
-        
-        for(int j = 0 ; j < col ; j++){
-            newRow[(a * j + b)%col] = A[i][j];
-            
-        }
-
-        delete A[i];
-        A[i] = newRow;
-    }
-    return A;
-}
-
-_8b **shuffleRow(_8b **A, int row, int col, int seed){
 
     _8b **output = new _8b*[row];
     vector<int> Coprimes;
     for(int i = 0 ; i < row ; i++){
         if(isCoprime(i,row)){
-            Coprimes.push_back(i);
-        }
-    }
-    int a,b;
-    a = Coprimes[seed % Coprimes.size()];
-    b = (seed + row/2)%row;
-    for(int i = 0 ; i < row ; i++){
-        output[(a*i+b)%row] = A[i];
+        fwefeafaewfaewfi];
     }
     for(int i = 0 ; i < row ; i++){
-        delete A[i];
+        delete A[i];fwfewewf
     }
     return output;
 
