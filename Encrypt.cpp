@@ -36,7 +36,7 @@ _8b **Transpose(_8b **A, int row, int col){ // Blue 專用
 
     _8b **output = new _8b*[col];
     for (int i = 0; i < col; i++) {
-        output[i] = new _8b[row]{0};
+        output[i] = new _8b[row];
         for(int j = 0; j < row; j++){
             output[i][j] = A[j][i];
         }
@@ -91,7 +91,7 @@ _8b **convolution(_8b **A, _8b *kernel_33, int row, int col){
 
     _8b **output = new _8b*[row];
     for (int i = 0; i < row; i++) {
-        output[i] = new _8b[col]{0};
+        output[i] = new _8b[col];
     }
     for(int i = 0 ; i < row ; i++){
         for(int j = 0 ; j < col ; j++){
@@ -229,9 +229,7 @@ int main(int argc, char *argv[])
         plaintext.push_back(_8b(c));
     }
     cout << "count " << count << endl;
-    /*for(int i = 0 ; i < plaintext.size() ;i ++){
-        cout << plaintext[i] <<endl;
-    }*/
+
     
     fRGB.open("RGB.txt");
     fRGB >> row >> col ;
@@ -242,14 +240,14 @@ int main(int argc, char *argv[])
     _8b **Gt = new _8b*[col];
     _8b **Bt = new _8b*[col];
     for (int i = 0; i < row; i++) {
-        R[i] = new _8b[col]{0};
-        G[i] = new _8b[col]{0};
-        B[i] = new _8b[col]{0};
+        R[i] = new _8b[col];
+        G[i] = new _8b[col];
+        B[i] = new _8b[col];
     }
     for (int i = 0; i < col; i++) {
-        Rt[i] = new _8b[row]{0};
-        Gt[i] = new _8b[row]{0};
-        Bt[i] = new _8b[row]{0};
+        Rt[i] = new _8b[row];
+        Gt[i] = new _8b[row];
+        Bt[i] = new _8b[row];
     }
     
     
@@ -293,15 +291,15 @@ int main(int argc, char *argv[])
     fout.open("random_output.txt");
     _8b *_1DArray = new _8b[3*row*col];
     for(int i = 0; i < row ; i++){
-        //cout << i <<endl;
+
         for(int j = 0 ; j < col; j++){
-            //cout << col * i + j << " ";
+
             fout << R[i][j] << " " << G[i][j] << " " << G[i][j]  << " ";
             _1DArray[3*(i*col+j)] = R[i][j];
             _1DArray[3*(i*col+j)+1] = G[i][j];
             _1DArray[3*(i*col+j)+2] = B[i][j];
         }
-        //cout << 1 <<endl;
+
         fout << endl;
     }
     int max_entropy_pos = find_max_entropy_pos(_1DArray, 3*row*col, plaintext.size());
@@ -311,8 +309,7 @@ int main(int argc, char *argv[])
     fc.open(argv[2], ios::binary);
     for(int i = 0 ; i < plaintext.size() ; i++){
         cipher[i] = plaintext[i] ^ _1DArray[max_entropy_pos + i];
-        //cout << short(plaintext[i]) << " " << _1DArray[max_entropy_pos + i] << endl;
-        //cout << short(cipher[i]) ;
+
         fc << _8b(cipher[i]);
     }
     fc.close();
