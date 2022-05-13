@@ -1,7 +1,7 @@
 #include <iostream>
 #include <fstream>
 #include <cstring>
-#include <random>
+
 #include <chrono>
 #include <vector>
 #include <cmath>
@@ -142,12 +142,12 @@ void shuffle(_8b arr[], _8b n, unsigned seed){
 }
 
 
-double entropy(vector<int> v, int total){
-    double entropy = 0.0;
+float entropy(vector<int> v, int total){
+    float entropy = 0.0;
     for(int i = 0 ; i < v.size() ; i++){
         if(v[i] == 0)
             continue;
-        entropy -= ((double)v[i]/(double)total) * log2((double)v[i]/(double)total);
+        entropy -= ((float)v[i]/(float)total) * log2((float)v[i]/(float)total);
     }
 
     return entropy;
@@ -155,7 +155,7 @@ double entropy(vector<int> v, int total){
 
 int find_max_entropy_pos(_8b *A, int A_length, int plaintext_length){
     
-    double max_entropy;
+    float max_entropy;
     int max_entropy_pos;
     vector<int> frequency(256,0);
     for(int i = 0 ; i < plaintext_length ; i++){
@@ -172,12 +172,12 @@ int find_max_entropy_pos(_8b *A, int A_length, int plaintext_length){
             max_entropy = Entropy;
             max_entropy_pos = i - plaintext_length + 1;
         }
-        cout << max_entropy <<endl;
+        //cout << max_entropy <<endl;
         if(max_entropy > 5.0f){
             break;
         }
     }
-    //cout << "Max entropy: "<<max_entropy<<endl;
+    cout << "Max entropy: "<<max_entropy<<endl;
     return max_entropy_pos;
 }
 
@@ -270,7 +270,7 @@ int main(int argc, char *argv[])
 
     cout << "Processing Red\n";
     shuffle(kernel1, 9, seed++);
-    R = shiftRow(R, row, col);
+    /*R = shiftRow(R, row, col);
     R = shuffleRow(R, row, col, seed);
     Rt = Transpose(R, row, col);
     Rt = shiftRow(Rt,col,row);
@@ -289,7 +289,7 @@ int main(int argc, char *argv[])
     Bt = Transpose(B, row, col);
     Bt = shiftRow(Bt,col,row);
     B = Transpose(Bt, col, row);
-    B = convolution(B, kernel1, row, col);
+    B = convolution(B, kernel1, row, col);*/
 
     ofstream fout;
     fout.open("random_output.txt");
@@ -307,7 +307,7 @@ int main(int argc, char *argv[])
         fout << endl;
     }
     int max_entropy_pos = find_max_entropy_pos(_1DArray, 3*row*col, plaintext.size());
-    //cout << "Position: " << max_entropy_pos << endl;
+    cout << "Position: " << max_entropy_pos << endl;
     vector<_8b> cipher(plaintext.size(),0);
     ofstream fc;
     fc.open(argv[2], ios::binary);
