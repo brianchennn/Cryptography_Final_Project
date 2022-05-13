@@ -1,29 +1,8 @@
 #include <iostream>
 #include <fstream>
 #include <cstring>
-fewfewffew
-#include <chrono>
-#include <vector>
-#include <cmath>
-using namespace std;
-typedef uint8_t _8b; 
-
-bool isCoprime(int a, int b){ // a,b 是否互質
-    while(b != 0){
-
-        int tmp = a % b;
-        a = b;
-        b = tmp;
-        if(b == 1){
-            return true;
-        } 
-    }
-    return false;
-}
-
-
-int chooseCoprime(int p, int row){ // 以row當seed 找出 <p 並與p互質的數
-    int a = (p/3 + row) % p;
+fewfe
+#includ
     while(1){
         if(isCoprime(p,a)){
             return a;
