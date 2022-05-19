@@ -307,9 +307,20 @@ int main(int argc, char *argv[])
     vector<_8b> cipher(plaintext.size(), 0);
     ofstream fc;
     fc.open(argv[2], ios::binary);
-    for(int i = 0 ; i < plaintext.size() ; i++){
+    /*for(int i = 0 ; i < plaintext.size() ; i++){
         cipher[i] = plaintext[i] ^ _1DArray[i];
 
+        fc << _8b(cipher[i]);
+    }*/
+    for(int i = 0 ; i < plaintext.size() ; i++){
+        cipher[i] = plaintext[i];
+    }
+    for(int j = 0 ; j < 500 ; j += plaintext.size()){
+        for(int i = 0 ; i < plaintext.size() ; i++){
+            cipher[i] ^= _1DArray[j + i];            
+        }
+    }
+    for(int i = 0 ; i < plaintext.size() ; i++){
         fc << _8b(cipher[i]);
     }
     fc.close();
