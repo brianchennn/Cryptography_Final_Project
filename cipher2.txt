@@ -1,2 +1,1 @@
-‘ w‹ll>as statemenYs ha³ iiitlal@ze those definitions. Onceth‹ m2du
-e öodO i) wÐit<en, it can “e ieuÔed by any script that imports
+s well as statements that initialize thoseAde!in´tions. Once the module code is written, it can be reused by any script that imports

@@ -5,7 +5,7 @@
 #include <vector>
 #include <cmath>
 using namespace std;
-typedef uint8_t _8b; 
+typedef int _8b; 
 
 bool isCoprime(int a, int b){ // a,b 是否互質
     while(b != 0){
@@ -307,11 +307,12 @@ int main(int argc, char *argv[])
     vector<_8b> cipher(plaintext.size(), 0);
     ofstream fc;
     fc.open(argv[2], ios::binary);
-    /*for(int i = 0 ; i < plaintext.size() ; i++){
+    for(int i = 0 ; i < plaintext.size() ; i++){
         cipher[i] = plaintext[i] ^ _1DArray[i];
 
-        fc << _8b(cipher[i]);
-    }*/
+        fc << char(cipher[i]);
+    }
+    /*
     for(int i = 0 ; i < plaintext.size() ; i++){
         cipher[i] = plaintext[i];
     }
@@ -322,7 +323,7 @@ int main(int argc, char *argv[])
     }
     for(int i = 0 ; i < plaintext.size() ; i++){
         fc << _8b(cipher[i]);
-    }
+    }*/
     fc.close();
     std::time_t t2 = std::time(nullptr);
     cout << "Time: "<< t2-t1 <<" sec "<<endl;
