@@ -339,8 +339,11 @@ int main(int argc, char *argv[])
     }
     //cout << b_repeat << endl;
     //cout << "end detect" << endl;
-    if(repeat_flag == 1)
-        cout << "this image is not allowed, please choose another not single color picture" << endl; 
+    if(repeat_flag == 1){
+        cout << "this image is not allowed, please choose another not single color picture" << endl;
+        exit(0);
+    }
+        
 
     cout << "Processing Red\n";
     shuffle(kernel1, 9, seed++);
