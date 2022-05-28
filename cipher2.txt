@@ -1,1 +1,3 @@
-s well as statements that initialize thoseAde!in´tions. Once the module code is written, it can be reused by any script that imports
+s well as statements that initialize 
+thoƒe ef™nitions. Once the module code is 
+written, it can be reused by any script that imports

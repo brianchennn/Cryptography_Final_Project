@@ -256,13 +256,91 @@ int main(int argc, char *argv[])
             fRGB >> R[i][j];
             fRGB >> G[i][j];
             fRGB >> B[i][j];
-            //cout << B[i][j]<<endl;
+            //cout << "r" << R[i][j] << "G" << G[i][j] << "B" << B[i][j]<<endl;
         }
     }
-    fRGB.close();
     
+    fRGB.close();
     _8b kernel1[9] = {2,3,5,7,11,13,17,19,23};
     unsigned int seed = 1;
+    //for(int i = 0; i < row ; i++){
+    //    for(int j = 0 ; j < col; j++){
+    //        cout <<  R[i][j] << endl;
+    //        cout <<  G[i][j] << endl;
+    //        cout <<  B[i][j] << endl;
+    //    }
+    //}
+    cout << "#####################################################" << endl;
+
+
+////////////////////////////// detect 0//////////////////////////
+    int r_inx = 0;
+    int r_repeat = 0;
+    bool repeat_flag = 0;
+    int counter = 0;
+    for(int i = 0; i < row/2 ; i++){
+        for(int j = 0 ; j < col; j++){
+            if(R[i][j] == 0){
+                //cout << R[i][j]<< endl;
+                r_repeat++;
+            }
+            else
+                r_repeat = 0;
+            if(r_repeat > 10)
+                break;
+        }
+        if(r_repeat > 10){
+            repeat_flag = 1;
+            cout << "red" << endl;
+            break;
+        }
+    }
+    //cout << r_repeat << endl;
+    //cout << "end detect" << endl; 
+    int g_inx = 0;
+    int g_repeat = 0;
+    for(int i = 0; i < row/2 ; i++){
+        for(int j = 0 ; j < col; j++){
+            if(G[i][j] == 0){
+                //cout << G[i][j] << endl;
+                g_repeat++;
+            }
+            else
+                g_repeat = 0;
+            if(g_repeat > 10)
+                break;
+        }
+        if(g_repeat > 10){
+            repeat_flag = 1;
+            cout << "green" << endl;
+            break;
+        }
+    }
+    //cout << g_repeat << endl;
+    //cout << "end detect" << endl; 
+    int b_inx = 0;
+    int b_repeat = 0;
+    for(int i = 0; i < row/2 ; i++){
+        for(int j = 0 ; j < col; j++){
+            if(B[i][j]==0){
+                //cout << B[i][j] << endl;
+                b_repeat++;
+            }
+            else
+                b_repeat = 0;
+            if(b_repeat > 10)
+                break;
+        }
+         if(b_repeat > 10){
+            repeat_flag = 1;
+            cout << "blue" << endl;
+            break;
+         }
+    }
+    //cout << b_repeat << endl;
+    //cout << "end detect" << endl;
+    if(repeat_flag == 1)
+        cout << "this image is not allowed, please choose another not single color picture" << endl; 
 
     cout << "Processing Red\n";
     shuffle(kernel1, 9, seed++);
